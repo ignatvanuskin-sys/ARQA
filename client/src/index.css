@@ -632,3 +632,11 @@ html { scroll-padding-top: 84px; }
 @media (prefers-reduced-motion: reduce) { .reveal-on-scroll, .reveal-on-scroll.is-visible { opacity: 1; transform: none; transition: none; } .faq-answer { transition: none; } }
 
 @media (max-width: 620px) { .rating-source { min-height: 48px; } .review-card-top, .client-review-card small { font-size: 10px; } }
+
+
+/* Align the wide dialogue card's copy to the visual center of its panel. */
+.why-card-wide { position: relative; }
+.why-card-wide > div:nth-child(2) { position: absolute; left: 50%; top: 50%; width: min(480px, calc(100% - 120px)); transform: translate(-50%, -50%); }
+@media (max-width: 900px) {
+  .why-card-wide > div:nth-child(2) { position: static; width: auto; transform: none; }
+}
