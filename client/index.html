@@ -10,22 +10,22 @@
     <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
-    <!-- TODO: replace with the real production domain before launch -->
-    <link rel="canonical" href="https://arqa-kokshetau.kz/" />
+    <!-- Domain is generated from SITE_URL at build time (see vite.config.ts) -->
+    <link rel="canonical" href="{{SITE_URL}}/" />
     <meta property="og:site_name" content="Arqa" />
     <meta property="og:title" content="Arqa — автосервис в Кокшетау" />
     <meta property="og:description" content="Ремонт и диагностика легковых автомобилей. Ежедневно 10:00–22:00, ул. Шагалалы, 1/1." />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://arqa-kokshetau.kz/" />
+    <meta property="og:url" content="{{SITE_URL}}/" />
     <meta property="og:locale" content="ru_RU" />
-    <meta property="og:image" content="https://arqa-kokshetau.kz/assets/og-image.jpg" />
+    <meta property="og:image" content="{{SITE_URL}}/assets/og-image.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="Фасад автосервиса Arqa в Кокшетау" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Arqa — автосервис в Кокшетау" />
     <meta name="twitter:description" content="Ремонт и диагностика легковых автомобилей. Ежедневно 10:00–22:00, ул. Шагалалы, 1/1." />
-    <meta name="twitter:image" content="https://arqa-kokshetau.kz/assets/og-image.jpg" />
+    <meta name="twitter:image" content="{{SITE_URL}}/assets/og-image.jpg" />
     <title>Arqa — автосервис в Кокшетау | Диагностика и ремонт авто</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -44,6 +44,11 @@
     <link rel="preload" as="image" href="/assets/facade-960.webp" fetchpriority="high" />
   </head>
   <body>
+    <!-- Boot hero: paints the LCP poster before React loads. Lives outside #root
+         so React cannot replace it (which would re-trigger LCP); hidden on mount. -->
+    <div class="boot-hero" aria-hidden="true">
+      <img src="/assets/facade-960.webp" width="960" height="720" alt="" fetchpriority="high" />
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

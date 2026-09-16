@@ -26,7 +26,9 @@ export const bookingSchema = z.object({
     .trim()
     .min(5, "Опишите, что нужно сделать")
     .max(2000, "Описание слишком длинное"),
-  website: z.string().max(0, "Заполните форму корректно").optional().or(z.literal("")),
+  // Honeypot: clients keep it empty; the server silently drops filled values,
+  // so no strict validation here — any string is accepted and discarded.
+  website: z.string().optional(),
 });
 
 export type BookingInput = z.infer<typeof bookingSchema>;

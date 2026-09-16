@@ -1,4 +1,4 @@
-import { normalizePhone, bookingSchema } from "@shared/booking";
+import { bookingSchema, normalizePhone } from "@shared/booking";
 import cors from "cors";
 import express from "express";
 import rateLimit from "express-rate-limit";
@@ -6,48 +6,13 @@ import { createServer } from "http";
 import helmet from "helmet";
 import path from "path";
 import { fileURLToPath } from "url";
+import { bookingMessage, sendBookingToTelegram, telegramConfigured } from "./telegram";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const PORT = Number(process.env.PORT) || 3000;
 const isProduction = process.env.NODE_ENV === "production";
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
-
-function sendTelegramMessage(text: string) {
-  const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-  return fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: TELEGRAM_CHAT_ID,
-      text,
-      parse_mode: "HTML",
-      disable_web_page_preview: true,
-    }),
-  });
-}
-
-function bookingMessage(booking: Record<string, string>) {
-  const { name, phone, car, date, time, issue } = booking;
-  return [
-    "🛠 <b>Новая заявка с сайта Arqa</b>",
-    "",
-    `👤 <b>Имя:</b> ${escapeHtml(name)}`,
-    `📞 <b>Телефон:</b> ${escapeHtml(phone)}`,
-    `🚗 <b>Авто:</b> ${escapeHtml(car)}`,
-    `📅 <b>Дата:</b> ${escapeHtml(date)} в ${escapeHtml(time)}`,
-    `🔧 <b>Проблема:</b> ${escapeHtml(issue)}`,
-  ].join("\n");
-}
-
-function escapeHtml(value: string) {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;");
-}
 
 async function startServer() {
   const app = express();
@@ -90,6 +55,13 @@ async function startServer() {
   });
 
   app.post("/api/booking", bookingLimiter, async (req, res) => {
+    // Honeypot: silently accept-and-drop so bots do not retry. Checked before
+    // validation on purpose — no error, no Telegram message.
+    if (typeof req.body?.website === "string" && req.body.website.trim() !== "") {
+      res.json({ ok: true });
+      return;
+    }
+
     const parsed = bookingSchema.safeParse(req.body);
     if (!parsed.success) {
       const first = parsed.error.issues[0];
@@ -97,14 +69,9 @@ async function startServer() {
       return;
     }
 
-    const { website, phone, ...booking } = parsed.data;
-    if (website) {
-      // Honeypot filled — pretend success so bots do not retry.
-      res.json({ ok: true });
-      return;
-    }
+    const { website: _website, phone, ...booking } = parsed.data;
 
-    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+    if (!telegramConfigured()) {
       console.error("TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID are not configured — booking dropped");
       res.status(503).json({
         error: "Приём заявок временно не настроен. Позвоните нам: +7 771 256 66 91",
@@ -113,10 +80,7 @@ async function startServer() {
     }
 
     try {
-      const response = await sendTelegramMessage(bookingMessage({ ...booking, phone }));
-      if (!response.ok) {
-        throw new Error(`Telegram API responded ${response.status}`);
-      }
+      await sendBookingToTelegram(bookingMessage({ ...booking, phone }));
       console.log(`Booking accepted: ${normalizePhone(phone)} (${booking.car}, ${booking.date} ${booking.time})`);
       res.json({ ok: true });
     } catch (error) {
@@ -136,8 +100,8 @@ async function startServer() {
     express.static(staticPath, {
       maxAge: "30d",
       setHeaders(res, filePath) {
-        // Never cache the HTML shell or service endpoints.
-        if (filePath.endsWith(".html") || filePath.startsWith(path.join(staticPath, "api"))) {
+        // Never cache the HTML shell.
+        if (filePath.endsWith(".html")) {
           res.setHeader("Cache-Control", "no-cache");
         }
       },

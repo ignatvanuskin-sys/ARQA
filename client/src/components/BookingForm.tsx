@@ -42,6 +42,8 @@ export default function BookingForm() {
   } = useForm<BookingInput>({
     resolver: zodResolver(bookingSchema),
     defaultValues: { name: "", phone: "", car: "", date: "", time: "", issue: "", website: "" },
+    // The honeypot must never trigger client-side validation errors.
+    // Filled honeypots are dropped silently on the server.
   });
 
   async function onSubmit(values: BookingInput) {
