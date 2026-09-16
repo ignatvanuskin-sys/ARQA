@@ -57,14 +57,26 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .nav-cta:hover { background: var(--yellow); border-color: var(--yellow); color: var(--ink); transform: translateY(-1px); }
 .mobile-nav-actions, .mobile-menu, .mobile-menu-scrim { display: none; }
 
-.hero { min-height: 730px; position: relative; background: var(--ink); color: var(--white); isolation: isolate; }
+/* Desktop + tablet: the header follows the scroll once the hero is passed.
+   Slide-down masks the absolute->fixed switch; no fill mode, so no stray
+   transform containing block is left behind. */
+@media (min-width: 621px) {
+  .nav-wrap.is-following { position: fixed; top: 0; background: rgba(21,21,21,.94); box-shadow: 0 8px 22px rgba(0,0,0,.2); backdrop-filter: blur(14px); animation: nav-drop .25s var(--ease-out); }
+}
+@keyframes nav-drop { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+
+.hero { min-height: 730px; position: relative; background: var(--ink) url("/assets/facade-960.webp") center / cover no-repeat; color: var(--white); isolation: isolate; }
 .boot-hero { position: fixed; inset: 0; z-index: 1; background: var(--ink); }
 .boot-hero.is-done { display: none; }
 .boot-hero img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.82); }
 @media (max-width: 620px) { .boot-hero img { object-position: 63% center; } }
 .boot-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(13,14,15,.97) 0%, rgba(13,14,15,.87) 34%, rgba(13,14,15,.18) 78%, rgba(13,14,15,.48) 100%), linear-gradient(0deg, rgba(13,14,15,.5), transparent 40%); }
 .hero-video, .hero-overlay { position: absolute; inset: 0; width: 100%; height: 100%; }
-.hero-video { z-index: -3; object-fit: cover; filter: saturate(.82); background: var(--ink); }
+/* Compositor layer kills repaint judder on scroll; opacity crossfade hides the
+   poster->first-frame pop. The same poster sits on .hero underneath, so a
+   paused/not-yet-playing video renders an identical frame — zero visual jump. */
+.hero-video { z-index: -3; object-fit: cover; filter: saturate(.82); background: transparent; transform: translateZ(0); opacity: 0; transition: opacity .6s ease; }
+.hero-video.is-playing { opacity: 1; }
 .hero-overlay { z-index: -2; background: linear-gradient(90deg, rgba(13,14,15,.97) 0%, rgba(13,14,15,.87) 34%, rgba(13,14,15,.18) 78%, rgba(13,14,15,.48) 100%), linear-gradient(0deg, rgba(13,14,15,.5), transparent 40%); }
 .hero::after { content: ''; position: absolute; inset: 0; z-index: -1; opacity: .1; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.4'/%3E%3C/svg%3E"); }
 .hero-inner { min-height: 730px; padding-top: 156px; padding-bottom: 92px; display: flex; align-items: center; justify-content: space-between; gap: 80px; }

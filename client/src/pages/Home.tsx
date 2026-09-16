@@ -345,6 +345,8 @@ export default function Home() {
             playsInline
             preload={isSmallScreen ? "none" : "metadata"}
             poster={HERO_IMAGE}
+            onPlaying={() => heroVideoRef.current?.classList.add("is-playing")}
+            onError={() => heroVideoRef.current?.classList.remove("is-playing")}
             aria-label="Атмосфера автосервиса Arqa"
           >
             <source src={HERO_VIDEO} type="video/mp4" />
