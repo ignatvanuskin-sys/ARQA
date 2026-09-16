@@ -296,8 +296,10 @@ export default function Home() {
           </a>
           <div className="nav-links">
             <a href="#services">Услуги</a>
-            <a href="#trust">Почему Arqa</a>
-            <a href="#booking">Запись</a>
+            <a href="#advantages">Преимущества</a>
+            <a href="#client-reviews">Отзывы</a>
+            <a href="#pricing">Цены</a>
+            <a href="#location">Контакты</a>
           </div>
           <a className="nav-cta" href="#booking"><CalendarDays size={16} /> Записаться</a>
           <div className="mobile-nav-actions">
@@ -326,9 +328,10 @@ export default function Home() {
           <div className="mobile-menu" id="mobile-menu">
             <nav aria-label="Мобильное меню">
               <a href="#services" onClick={() => setMobileMenuOpen(false)}>Услуги <ArrowUpRight size={16} /></a>
-              <a href="#trust" onClick={() => setMobileMenuOpen(false)}>Почему Arqa <ArrowUpRight size={16} /></a>
-              <a href="#gallery" onClick={() => setMobileMenuOpen(false)}>Фотографии <ArrowUpRight size={16} /></a>
-              <a href="#pricing" onClick={() => setMobileMenuOpen(false)}>Цены и гарантия <ArrowUpRight size={16} /></a>
+              <a href="#advantages" onClick={() => setMobileMenuOpen(false)}>Преимущества <ArrowUpRight size={16} /></a>
+              <a href="#client-reviews" onClick={() => setMobileMenuOpen(false)}>Отзывы <ArrowUpRight size={16} /></a>
+              <a href="#pricing" onClick={() => setMobileMenuOpen(false)}>Цены и условия <ArrowUpRight size={16} /></a>
+              <a href="#location" onClick={() => setMobileMenuOpen(false)}>Контакты <ArrowUpRight size={16} /></a>
               <a href="#booking" onClick={() => setMobileMenuOpen(false)}>Записаться <CalendarDays size={16} /></a>
             </nav>
           </div>
@@ -403,7 +406,7 @@ export default function Home() {
                     <div className="service-top"><span className="service-number">0{index + 1}</span><span className="service-icon">{service.icon}</span></div>
                     <h3>{service.title}</h3>
                     <p>{service.description}</p>
-                    <span className="service-link">Подробнее при записи <ArrowUpRight size={15} /></span>
+                    <a className="service-link" href="#booking">Уточнить при записи <ArrowUpRight size={15} /></a>
                   </article>
                 ))}
               </div>
@@ -411,7 +414,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="section dark-section why-section">
+        <section className="section dark-section why-section" id="advantages">
           <div className="container">
             <div className="section-heading dark-heading split-heading">
               <div><span className="eyebrow light">Важные детали</span><h2>Не громче.<br /><span>Понятнее.</span></h2></div>
@@ -514,7 +517,7 @@ export default function Home() {
           <div className="container faq-layout"><div><span className="eyebrow">Без мелкого шрифта</span><h2>Частые<br /><span>вопросы.</span></h2><p className="faq-intro">Если ответа здесь нет, можно написать в WhatsApp — контакт всегда под рукой.</p><a className="text-link" href={WHATSAPP_HREF} target="_blank" rel="noreferrer">Задать вопрос <ArrowUpRight size={15} /></a></div><div className="faq-list">{faq.map((item, index) => <div className={`faq-item ${openFaq === index ? "is-open" : ""}`} key={item.question}><button type="button" onClick={() => setOpenFaq(openFaq === index ? -1 : index)} aria-expanded={openFaq === index}><span><b>0{index + 1}</b>{item.question}</span><ChevronDown size={19} /></button>{openFaq === index && <div className="faq-answer"><p>{item.answer}</p></div>}</div>)}</div></div>
         </section>
 
-        <section className="location-section"><div className="container location-card"><div className="location-map" aria-hidden="true"><div className="map-grid" /><div className="map-pin"><MapPin size={22} fill="currentColor" /></div><div className="map-label">ARQA<br /><span>Шагалалы, 1/1</span></div></div><div className="location-info"><span className="eyebrow">Где нас найти</span><h2>Приезжайте<br /><span>в Arqa.</span></h2><div className="address-line"><MapPin size={19} /><div><strong>Кокшетау, ул. Шагалалы, 1/1</strong><span>Около 450 м от остановки «Нулевая дачная (по требованию)»</span></div></div><div className="location-actions"><a className="text-link" href="#booking">Записаться <CalendarDays size={15} /></a><a className="text-link" href={TWO_GIS_HREF} target="_blank" rel="noreferrer">Построить маршрут <Navigation size={15} /></a></div><div className="social-row"><a href="https://instagram.com/arqa_avto_kompleks" target="_blank" rel="noreferrer"><Instagram size={16} /> @arqa_avto_kompleks</a><span>Оплата: карта · наличные · перевод · QR</span></div></div></div></section>
+        <section className="location-section" id="location"><div className="container location-card"><div className="location-map" aria-hidden="true"><div className="map-grid" /><div className="map-pin"><MapPin size={22} fill="currentColor" /></div><div className="map-label">ARQA<br /><span>Шагалалы, 1/1</span></div></div><div className="location-info"><span className="eyebrow">Где нас найти</span><h2>Приезжайте<br /><span>в Arqa.</span></h2><div className="address-line"><MapPin size={19} /><div><strong>Кокшетау, ул. Шагалалы, 1/1</strong><span>Около 450 м от остановки «Нулевая дачная (по требованию)»</span></div></div><div className="location-actions"><a className="text-link" href="#booking">Записаться <CalendarDays size={15} /></a><a className="text-link" href={TWO_GIS_HREF} target="_blank" rel="noreferrer">Построить маршрут <Navigation size={15} /></a></div><div className="social-row"><a href="https://instagram.com/arqa_avto_kompleks" target="_blank" rel="noreferrer"><Instagram size={16} /> @arqa_avto_kompleks</a><span>Оплата: карта · наличные · перевод · QR</span></div></div></div></section>
       </main>
 
       {lightbox && <Suspense fallback={<div className="lightbox-loading" role="status">Открываем фото…</div>}><ArqaLightbox image={lightbox} onClose={() => setLightbox(null)} /></Suspense>}
