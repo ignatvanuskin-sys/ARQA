@@ -15,6 +15,7 @@ type ArqaLightboxProps = {
 export default function ArqaLightbox({ image, onClose }: ArqaLightboxProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const touchStartY = useRef<number | null>(null);
 
   useEffect(() => {
     const previousFocus = document.activeElement as HTMLElement | null;
@@ -52,7 +53,7 @@ export default function ArqaLightbox({ image, onClose }: ArqaLightboxProps) {
 
   return (
     <div className="lightbox" role="dialog" aria-modal="true" aria-label="Просмотр фотографии" onClick={onClose}>
-      <div className="lightbox-card" ref={dialogRef} onClick={(event) => event.stopPropagation()}>
+      <div className="lightbox-card" ref={dialogRef} onClick={(event) => event.stopPropagation()} onTouchStart={(event) => { touchStartY.current = event.touches[0]?.clientY ?? null; }} onTouchEnd={(event) => { const start = touchStartY.current; const end = event.changedTouches[0]?.clientY ?? start; touchStartY.current = null; if (start !== null && end !== null && end - start > 70) onClose(); }}>
         <button ref={closeRef} className="lightbox-close" onClick={onClose} aria-label="Закрыть просмотр">
           <X size={20} />
         </button>

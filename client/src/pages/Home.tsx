@@ -197,8 +197,6 @@ function scrollToId(id: string) {
 
 export default function Home() {
   const [openFaq, setOpenFaq] = useState(0);
-  const [rating, setRating] = useState(4);
-  const [hoverRating, setHoverRating] = useState(0);
   const [lightbox, setLightbox] = useState<{ path: string; title: string; label: string } | null>(null);
   const [reduceMotion, setReduceMotion] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
@@ -496,16 +494,6 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="section reviews-section">
-          <div className="container reviews-layout">
-            <div className="reviews-heading"><span className="eyebrow">Реальный контекст</span><h2>Что отмечают<br /><span>клиенты.</span></h2><div className="rating-lockup"><Star size={19} fill="currentColor" /><strong>4,4</strong><span>из 5 в 2GIS</span></div><a className="text-link" href={TWO_GIS_HREF} target="_blank" rel="noreferrer">Смотреть карточку 2GIS <ExternalLink size={15} /></a></div>
-            <div className="reviews-content">
-              <div className="review-highlight"><div className="quote-mark">“</div><p>В отзывах повторяются скорость, качество и понятные объяснения мастеров. Есть и критика по цене и коммуникации — это важный сигнал, который нельзя прятать.</p><div className="review-source"><span className="source-line" /> Сводка по 23 отзывам в 2GIS</div></div>
-              <div className="review-columns"><div><h3><Check size={17} /> Сильные сигналы</h3><ul><li>Быстрая и качественная работа</li><li>Объясняют проблему и результат</li><li>Отзывчивость и вежливость</li><li>Ремонт ходовой, генератора, тормозов и других узлов</li></ul></div><div><h3 className="caution-title"><span>!</span> Что уточнить</h3><ul><li>Итоговую стоимость и объём работ</li><li>Кто отвечает за конкретный заказ</li><li>Сроки и условия гарантии</li><li>Возможность работы с вашей моделью</li></ul></div></div>
-            </div>
-          </div>
-        </section>
-
         <section className="section client-reviews-section" id="client-reviews">
           <div className="container">
             <div className="section-heading split-heading">
@@ -516,11 +504,7 @@ export default function Home() {
               <div className="rating-panel">
                 <span className="rating-kicker">Открытый рейтинг 2GIS</span>
                 <div className="rating-score"><strong>4,4</strong><span>/ 5</span></div>
-                <div className="interactive-stars" onMouseLeave={() => setHoverRating(0)} role="group" aria-label="Оценить сервис от одного до пяти">
-                  {[1, 2, 3, 4, 5].map((star) => <button type="button" key={star} aria-label={`${star} звезд`} onMouseEnter={() => setHoverRating(star)} onFocus={() => setHoverRating(star)} onBlur={() => setHoverRating(0)} onClick={() => setRating(star)}><Star size={26} fill={(hoverRating || rating) >= star ? "currentColor" : "transparent"} /></button>)}
-                </div>
-                <p className="rating-feedback">{hoverRating ? `Вы выбрали ${hoverRating} из 5` : `Ваше впечатление: ${rating} из 5`}</p>
-                <a className="text-link rating-source-link" href={TWO_GIS_HREF} target="_blank" rel="noreferrer">Читать отзывы в 2GIS <ExternalLink size={15} /></a>
+                <a className="button button-dark rating-source" href={TWO_GIS_HREF} target="_blank" rel="noreferrer" onClick={() => trackCta("review_2gis")}>Оставить отзыв в 2GIS <ExternalLink size={15} /></a>
               </div>
               <div className="review-cards">
                 <article className="client-review-card"><div className="review-card-top"><span>01 / ПОВТОРЯЮЩАЯСЯ ТЕМА</span><div className="mini-stars"><Star size={14} fill="currentColor" /><Star size={14} fill="currentColor" /><Star size={14} fill="currentColor" /><Star size={14} fill="currentColor" /><Star size={14} fill="currentColor" /></div></div><h3>Быстро и качественно</h3><p>В отзывах клиенты часто отмечают скорость выполнения работ и качество результата.</p><small>Сводка по открытым отзывам · 2GIS</small></article>
