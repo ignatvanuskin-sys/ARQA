@@ -343,11 +343,11 @@ export default function Home() {
           <video
             className="hero-video"
             ref={heroVideoRef}
-            autoPlay={!reduceMotion && !isSmallScreen}
+            autoPlay={false}
             muted
             loop
             playsInline
-            preload={isSmallScreen ? "none" : "metadata"}
+            preload="none"
             poster={HERO_IMAGE}
             onPlaying={() => heroVideoRef.current?.classList.add("is-playing")}
             onError={() => heroVideoRef.current?.classList.remove("is-playing")}
@@ -417,14 +417,14 @@ export default function Home() {
         <section className="section dark-section why-section" id="advantages">
           <div className="container">
             <div className="section-heading dark-heading split-heading">
-              <div><span className="eyebrow light">Важные детали</span><h2>Не громче.<br /><span>Понятнее.</span></h2></div>
-              <div className="heading-note"><span className="note-index">02</span><p>Мы собрали то, что подтверждено открытой карточкой и отзывами. Без рекламного шума и неподтверждённых гарантий.</p></div>
+              <div><span className="eyebrow light">Почему обращаются</span><h2>Сервис без<br /><span>лишнего напряжения.</span></h2></div>
+              <div className="heading-note"><span className="note-index">02</span><p>Четыре понятные причины выбрать Arqa. Без громких обещаний — только условия, которые важно знать до визита.</p></div>
             </div>
             <div className="why-grid">
-              <article className="why-card why-card-large"><div className="why-number">01</div><div><h3>До 22:00<br />каждый день</h3><p>Можно обратиться после работы — график Arqa рассчитан на обычный ритм города.</p></div><Clock3 className="why-icon" size={42} strokeWidth={1.2} /></article>
-              <article className="why-card"><div className="why-number">02</div><h3>Тёплый бокс</h3><p>В карточке 2GIS отдельно отмечена аренда тёплого бокса.</p><div className="why-mini-mark">ARQA</div></article>
-              <article className="why-card"><div className="why-number">03</div><h3>Оплата без лишних вопросов</h3><p>Карта, наличные, перевод с карты и QR-код.</p><div className="payment-pills"><span>₸</span><span>QR</span><span>•••</span></div></article>
-              <article className="why-card why-card-wide"><div className="why-number">04</div><div><h3>Сначала — диалог</h3><p>Опишите проблему в WhatsApp, уточните возможность и стоимость, затем договоритесь о визите. Это рекомендуемый сценарий обращения, а не обещание регламента.</p></div><MessageCircle className="why-icon" size={42} strokeWidth={1.2} /></article>
+              <article className="why-card why-card-large"><div className="why-number">01</div><div><h3>До 22:00<br />каждый день</h3><p>Работаем ежедневно с 10:00 до 22:00 — можно приехать после работы.</p></div><Clock3 className="why-icon" size={42} strokeWidth={1.2} /></article>
+              <article className="why-card"><div className="why-number">02</div><h3>Тёплый бокс</h3><p>Автомобиль можно обслуживать в закрытом тёплом помещении.</p><div className="why-mini-mark">ARQA</div></article>
+              <article className="why-card"><div className="why-number">03</div><h3>Удобная оплата</h3><p>Карта, наличные, перевод или QR — выберите удобный вариант.</p><div className="payment-pills"><span>₸</span><span>QR</span><span>•••</span></div></article>
+              <article className="why-card why-card-wide"><div className="why-number">04</div><div><h3>Сначала — диалог</h3><p>Опишите проблему по телефону или в WhatsApp. До начала работ согласуем объём и стоимость.</p></div><MessageCircle className="why-icon" size={42} strokeWidth={1.2} /></article>
             </div>
           </div>
         </section>
@@ -508,7 +508,7 @@ export default function Home() {
 
         <section className="section contact-section" id="booking">
           <div className="container contact-layout">
-            <div className="contact-copy"><span className="eyebrow light">Запись на сервис</span><h2>Выберите<br /><em>удобное время.</em></h2><p>Заполните короткую форму: мы подготовим детали визита и подскажем следующий шаг.</p><div className="contact-phone"><Phone size={19} /><a href={PHONE_HREF}>{PHONE}</a></div><div className="contact-hours"><Clock3 size={16} /> Ежедневно · 10:00–22:00</div></div>
+            <div className="contact-copy"><span className="eyebrow light">Запись на сервис</span><h2>Выберите<br /><em>удобное время.</em></h2><p>Заполните короткую форму: мы подготовим детали визита и подскажем следующий шаг.</p><div className="contact-phone"><Phone size={19} /><div><span className="contact-phone-label">Телефон владельца / запись</span><a href={PHONE_HREF}>{PHONE}</a></div></div><div className="contact-hours"><Clock3 size={16} /> Ежедневно · 10:00–22:00</div></div>
             <Suspense fallback={<form className="contact-form" aria-busy="true"><div className="form-heading"><span>Заявка на запись</span></div></form>}><BookingForm /></Suspense>
           </div>
         </section>
