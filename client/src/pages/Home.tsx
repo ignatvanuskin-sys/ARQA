@@ -1,4 +1,4 @@
-import { Fragment, lazy, ReactNode, Suspense, useEffect, useRef, useState } from "react";
+﻿import { Fragment, lazy, ReactNode, Suspense, useEffect, useRef, useState } from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { track } from "@vercel/analytics";
 import { INSTAGRAM_HREF, PHONE, PHONE_HREF, TWO_GIS_HREF, WHATSAPP_HREF } from "@/lib/contacts";
@@ -182,7 +182,7 @@ const faq = [
   {
     question: "Как добраться?",
     answer:
-      "Адрес: Кокшетау, улица Шагалалы, 1/1. Ориентир — остановка «Нулевая дачная (по требованию)», около 450 м или 5 минут пешком по данным 2GIS.",
+      "Адрес: Кокшетау, улица Шагалалы, 1. Ориентир — остановка «Нулевая дачная (по требованию)», около 450 м или 5 минут пешком по данным 2GIS.",
   },
   {
     question: "Какие способы оплаты доступны?",
@@ -307,7 +307,7 @@ export default function Home() {
       <div className="topline">
         <div className="container topline-inner">
           <span><span className="status-dot" /> Ежедневно 10:00–22:00</span>
-          <span className="topline-location">Кокшетау · ул. Шагалалы, 1/1</span>
+          <span className="topline-location">Кокшетау · ул. Шагалалы, 1</span>
           <div className="topline-actions">
             <a href={PHONE_HREF}>{PHONE}</a>
             <a className="topline-wa" href={WHATSAPP_HREF} target="_blank" rel="noreferrer"><MessageCircle size={14} /> WhatsApp</a>
@@ -392,7 +392,7 @@ export default function Home() {
                 <a className="button button-yellow" href="#booking" onClick={() => trackCta("hero_booking")}><CalendarDays size={18} /> Записаться</a>
               </div>
               <div className="hero-meta">
-                <span><MapPin size={15} /> ул. Шагалалы, 1/1</span>
+                <span><MapPin size={15} /> ул. Шагалалы, 1</span>
                 <span><Clock3 size={15} /> Без выходных</span>
               </div>
             </div>
@@ -518,7 +518,7 @@ export default function Home() {
         <section className="section process-section">
           <div className="container">
             <div className="section-heading split-heading"><div><span className="eyebrow">Простой старт</span><h2>Три шага<br /><span>до сервиса.</span></h2></div><div className="heading-note"><span className="note-index">03</span><p>Короткий рекомендуемый сценарий обращения. Конкретные условия диагностики, сроков и сметы лучше подтвердить у владельца.</p></div></div>
-            <div className="process-grid"><div className="process-step reveal-on-scroll"><span>01</span><h3>Опишите проблему</h3><p>Напишите, что происходит, и укажите марку и модель автомобиля.</p><ArrowUpRight size={21} /></div><div className="process-step featured-step reveal-on-scroll"><span>02</span><h3>Согласуйте детали</h3><p>Уточните возможность, стоимость и удобное время по телефону или в WhatsApp.</p><MessageCircle size={21} /></div><div className="process-step reveal-on-scroll"><span>03</span><h3>Приезжайте в Arqa</h3><p>Кокшетау, улица Шагалалы, 1/1. Ориентир — остановка в 5 минутах.</p><Navigation size={21} /></div></div>
+            <div className="process-grid"><div className="process-step reveal-on-scroll"><span>01</span><h3>Опишите проблему</h3><p>Напишите, что происходит, и укажите марку и модель автомобиля.</p><ArrowUpRight size={21} /></div><div className="process-step featured-step reveal-on-scroll"><span>02</span><h3>Согласуйте детали</h3><p>Уточните возможность, стоимость и удобное время по телефону или в WhatsApp.</p><MessageCircle size={21} /></div><div className="process-step reveal-on-scroll"><span>03</span><h3>Приезжайте в Arqa</h3><p>Кокшетау, улица Шагалалы, 1. Ориентир — остановка в 5 минутах.</p><Navigation size={21} /></div></div>
           </div>
         </section>
 
@@ -540,7 +540,7 @@ export default function Home() {
           <div className="container faq-layout"><div><span className="eyebrow">Без мелкого шрифта</span><h2>Частые<br /><span>вопросы.</span></h2><p className="faq-intro">Если ответа здесь нет, можно написать в WhatsApp — контакт всегда под рукой.</p><a className="text-link" href={WHATSAPP_HREF} target="_blank" rel="noreferrer">Задать вопрос <ArrowUpRight size={15} /></a></div><div className="faq-list">{faq.map((item, index) => <div className={`faq-item ${openFaq === index ? "is-open" : ""}`} key={item.question}><button type="button" onClick={() => setOpenFaq(openFaq === index ? -1 : index)} aria-expanded={openFaq === index}><span><b>0{index + 1}</b>{item.question}</span><ChevronDown size={19} /></button><div className={`faq-answer ${openFaq === index ? "is-open" : ""}`}><div><p>{item.answer}</p></div></div></div>)}</div></div>
         </section>
 
-        <section className="location-section" id="location"><div className="container location-card"><div className="location-map" aria-hidden="true"><div className="map-grid" /><div className="map-pin"><MapPin size={22} fill="currentColor" /></div><div className="map-label">ARQA<br /><span>Шагалалы, 1/1</span></div></div><div className="location-info"><span className="eyebrow">Где нас найти</span><h2>Приезжайте<br /><span>в Arqa.</span></h2><div className="address-line"><MapPin size={19} /><div><strong>Кокшетау, ул. Шагалалы, 1/1</strong><span>Около 450 м от остановки «Нулевая дачная (по требованию)»</span></div></div><div className="contact-owner"><Phone size={18} /><div><span>Телефон владельца</span><a href={PHONE_HREF}>{PHONE}</a></div></div><div className="location-actions"><a className="text-link" href="#booking">Записаться <CalendarDays size={15} /></a><a className="text-link" href={TWO_GIS_HREF} target="_blank" rel="noreferrer">Построить маршрут <Navigation size={15} /></a></div><div className="social-row"><a href="https://instagram.com/arqa_avto_kompleks" target="_blank" rel="noreferrer"><Instagram size={16} /> @arqa_avto_kompleks</a><span>Оплата: карта · наличные · перевод · QR</span></div></div></div></section>
+        <section className="location-section" id="location"><div className="container location-card"><div className="location-map" aria-hidden="true"><div className="map-grid" /><div className="map-pin"><MapPin size={22} fill="currentColor" /></div><div className="map-label">ARQA<br /><span>Шагалалы, 1</span></div></div><div className="location-info"><span className="eyebrow">Где нас найти</span><h2>Приезжайте<br /><span>в Arqa.</span></h2><div className="address-line"><MapPin size={19} /><div><strong>Кокшетау, ул. Шагалалы, 1</strong><span>Около 450 м от остановки «Нулевая дачная (по требованию)»</span></div></div><div className="contact-owner"><Phone size={18} /><div><span>Телефон владельца</span><a href={PHONE_HREF}>{PHONE}</a></div></div><div className="location-actions"><a className="text-link" href="#booking">Записаться <CalendarDays size={15} /></a><a className="text-link" href={TWO_GIS_HREF} target="_blank" rel="noreferrer">Построить маршрут <Navigation size={15} /></a></div><div className="social-row"><a href="https://instagram.com/arqa_avto_kompleks" target="_blank" rel="noreferrer"><Instagram size={16} /> @arqa_avto_kompleks</a><span>Оплата: карта · наличные · перевод · QR</span></div></div></div></section>
       </main>
 
       {lightbox && <Suspense fallback={<div className="lightbox-loading" role="status">Открываем фото…</div>}><ArqaLightbox image={lightbox} onClose={() => setLightbox(null)} /></Suspense>}

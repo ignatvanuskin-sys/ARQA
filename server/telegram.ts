@@ -11,13 +11,14 @@ export function escapeHtml(value: string) {
 
 export function bookingMessage(booking: Omit<BookingInput, "website">) {
   const { name, phone, car, date, time, issue } = booking;
+  const when = [date, time].filter(Boolean).join(" в ");
   return [
     "🛠 <b>Новая заявка с сайта Arqa</b>",
     "",
     `👤 <b>Имя:</b> ${escapeHtml(name)}`,
     `📞 <b>Телефон:</b> ${escapeHtml(phone)}`,
     `🚗 <b>Авто:</b> ${escapeHtml(car)}`,
-    `📅 <b>Дата:</b> ${escapeHtml(date)} в ${escapeHtml(time)}`,
+    ...(when ? [`📅 <b>Желаемое время:</b> ${escapeHtml(when)}`] : []),
     `🔧 <b>Проблема:</b> ${escapeHtml(issue)}`,
   ].join("\n");
 }
