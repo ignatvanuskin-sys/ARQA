@@ -312,7 +312,13 @@ h2 { margin-top: 18px; font-size: clamp(42px, 5vw, 67px); line-height: .98; }
   .mobile-menu-scrim { position: fixed; inset: 0; z-index: -1; display: block; background: rgba(10,10,10,.5); animation: lightbox-in .18s ease both; }
   .mobile-menu { position: absolute; top: 84px; right: 20px; left: 20px; display: block; padding: 8px; border: 1px solid rgba(255,255,255,.18); background: rgba(21,21,21,.98); box-shadow: 0 18px 40px rgba(0,0,0,.28); animation: menu-in .18s var(--ease-out) both; }
   .mobile-menu nav { display: grid; }
-  .mobile-menu a { min-height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 13px; color: var(--white); border-bottom: 1px solid rgba(255,255,255,.1); font-size: 13px; font-weight: 700; }
+  .mobile-menu a { min-height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 13px; color: var(--white); border-bottom: 1px solid rgba(255,255,255,.1); font-size: 13px; font-weight: 700; opacity: 0; animation: menu-item-in .3s var(--ease-out) both; }
+  .mobile-menu a:nth-child(1) { animation-delay: .04s; }
+  .mobile-menu a:nth-child(2) { animation-delay: .07s; }
+  .mobile-menu a:nth-child(3) { animation-delay: .10s; }
+  .mobile-menu a:nth-child(4) { animation-delay: .13s; }
+  .mobile-menu a:nth-child(5) { animation-delay: .16s; }
+  .mobile-menu a:nth-child(6) { animation-delay: .19s; }
   .mobile-menu a:last-child { border-bottom: 0; color: var(--yellow); }
   .mobile-menu a svg { color: var(--yellow); }
   .hero-inner { min-height: 680px; padding-top: 145px; align-items: flex-end; }
@@ -355,7 +361,8 @@ h2 { margin-top: 18px; font-size: clamp(42px, 5vw, 67px); line-height: .98; }
   .mobile-phone, .mobile-menu-trigger { min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,.35); background: transparent; color: var(--white); cursor: pointer; }
   .mobile-phone { gap: 7px; padding: 0 11px; font: 10px 'IBM Plex Mono', monospace; white-space: nowrap; }
   .mobile-phone.is-visible { border-color: var(--yellow); color: var(--yellow); }
-  .mobile-menu-trigger { width: 44px; padding: 0; cursor: pointer; }
+  .mobile-menu-trigger { width: 44px; padding: 0; cursor: pointer; transition: transform .28s var(--ease-out), border-color .2s ease, color .2s ease; }
+  .mobile-menu-trigger.is-open { transform: rotate(90deg); border-color: var(--yellow); color: var(--yellow); }
   .mobile-menu-scrim { position: fixed; inset: 0; z-index: -1; display: block; background: rgba(10,10,10,.5); animation: lightbox-in .18s ease both; }
   .mobile-menu { position: absolute; top: 73px; right: 16px; left: 16px; display: block; padding: 8px; border: 1px solid rgba(255,255,255,.18); background: rgba(21,21,21,.98); box-shadow: 0 18px 40px rgba(0,0,0,.28); animation: menu-in .18s var(--ease-out) both; }
   .mobile-menu nav { display: grid; }
@@ -425,6 +432,7 @@ h2 { margin-top: 18px; font-size: clamp(42px, 5vw, 67px); line-height: .98; }
 }
 
 @keyframes menu-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes menu-item-in { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
 
 
 /* Gallery, pricing and booking additions */

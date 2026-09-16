@@ -318,14 +318,14 @@ export default function Home() {
                 <Phone size={19} />
               </button>
             )}
-            <button type="button" className="mobile-menu-trigger" onClick={() => setMobileMenuOpen((open) => !open)} aria-expanded={mobileMenuOpen} aria-controls="mobile-menu" aria-label={mobileMenuOpen ? "Закрыть меню" : "Открыть меню"}>
+            <button type="button" className={`mobile-menu-trigger ${mobileMenuOpen ? "is-open" : ""}`} onClick={() => setMobileMenuOpen((open) => !open)} aria-expanded={mobileMenuOpen} aria-controls="mobile-menu" aria-label={mobileMenuOpen ? "Закрыть меню" : "Открыть меню"}>
               {mobileMenuOpen ? <X size={23} /> : <Menu size={23} />}
             </button>
           </div>
         </nav>
         {mobileMenuOpen && <>
           <div className="mobile-menu-scrim" onClick={() => setMobileMenuOpen(false)} aria-hidden="true" />
-          <div className="mobile-menu" id="mobile-menu">
+          <div className="mobile-menu is-open" id="mobile-menu">
             <nav aria-label="Мобильное меню">
               <a href="#services" onClick={() => setMobileMenuOpen(false)}>Услуги <ArrowUpRight size={16} /></a>
               <a href="#advantages" onClick={() => setMobileMenuOpen(false)}>Преимущества <ArrowUpRight size={16} /></a>
