@@ -29,7 +29,8 @@ export default async function handler(req, res) {
   if (booking.issue.length < 5 || booking.issue.length > 2000) return res.status(400).json({ error: "Опишите, что нужно сделать" });
 
   if (!process.env.TELEGRAM_BOT_TOKEN || !process.env.TELEGRAM_CHAT_ID) {
-    return res.status(503).json({ error: "Приём заявок временно не настроен. Позвоните владельцу: +7 771 256 66 91" });
+    console.log("Demo booking accepted", { name: booking.name, phone: booking.phone, car: booking.car, date: booking.date, time: booking.time });
+    return res.status(200).json({ ok: true, demo: true });
   }
   try {
     const base = process.env.TELEGRAM_API_URL || "https://api.telegram.org";

@@ -33,6 +33,7 @@ type Status = "idle" | "sending" | "success" | "error";
 export default function BookingForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [serverError, setServerError] = useState<string | null>(null);
+  const [demoMode, setDemoMode] = useState(false);
   const {
     register,
     handleSubmit,
@@ -55,10 +56,11 @@ export default function BookingForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-      const data = (await response.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      const data = (await response.json().catch(() => ({}))) as { ok?: boolean; demo?: boolean; error?: string };
       if (!response.ok || !data.ok) {
         throw new Error(data.error ?? "Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам.");
       }
+      setDemoMode(Boolean(data.demo));
       setStatus("success");
       reset();
     } catch (error) {
@@ -71,12 +73,12 @@ export default function BookingForm() {
     return (
       <div className="contact-form" role="status">
         <div className="form-heading">
-          <span>Заявка отправлена</span>
+          <span>{demoMode ? "Демо-заявка отправлена" : "Заявка отправлена"}</span>
           <span className="form-badge">Готово</span>
         </div>
         <div className="form-success form-success-block">
           <p>
-            <Check size={15} /> Спасибо! Заявка получена — перезвоним в рабочее время (10:00–22:00), чтобы подтвердить запись.
+            <Check size={15} /> {demoMode ? "Демо-режим: форма отработала успешно, но данные не отправлены владельцу." : "Спасибо! Заявка получена — перезвоним в рабочее время (10:00–22:00), чтобы подтвердить запись."}
           </p>
           <a className="form-call-link" href={PHONE_HREF}>
             <Phone size={15} /> Не хотите ждать? {PHONE}
