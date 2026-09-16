@@ -1,0 +1,8 @@
+node_modules
+dist
+assets-src
+.env*
+!.env.example
+.github
+.git
+README.md
