@@ -1,4 +1,6 @@
-import { lazy, ReactNode, Suspense, useEffect, useRef, useState } from "react";
+import { Fragment, lazy, ReactNode, Suspense, useEffect, useRef, useState } from "react";
+import { Analytics } from "@vercel/analytics/react";
+import { track } from "@vercel/analytics";
 import { INSTAGRAM_HREF, PHONE, PHONE_HREF, TWO_GIS_HREF, WHATSAPP_HREF } from "@/lib/contacts";
 import {
   ArrowDownRight,
@@ -36,6 +38,10 @@ const HERO_IMAGE = "/assets/facade-960.webp";
 const HERO_VIDEO = "/assets/hero.mp4";
 const GALLERY_SIZES_MAIN = "(min-width: 1024px) 50vw, (min-width: 621px) 46vw, 92vw";
 const GALLERY_SIZES_SIDE = "(min-width: 1024px) 30vw, (min-width: 621px) 46vw, 92vw";
+
+function trackCta(name: string) {
+  void track("cta_click", { name });
+}
 
 type GalleryImage = {
   base: string;
@@ -93,6 +99,7 @@ function Photo({ base, alt, sizes, width, height, eager }: { base: string; alt: 
         alt={alt}
         loading={eager ? "eager" : "lazy"}
         decoding="async"
+        fetchPriority={eager ? "high" : "auto"}
       />
     </picture>
   );
@@ -103,6 +110,7 @@ type Service = {
   description: string;
   icon: ReactNode;
   accent: string;
+  group: "Диагностика" | "Ремонт" | "Обслуживание";
 };
 
 const services: Service[] = [
@@ -111,36 +119,42 @@ const services: Service[] = [
     description: "Электронные системы авто и поиск причин неисправности.",
     icon: <Gauge size={24} strokeWidth={1.8} />,
     accent: "yellow",
+    group: "Диагностика",
   },
   {
     title: "Ходовая часть",
     description: "Ремонт и обслуживание узлов подвески и тормозной системы.",
     icon: <CarFront size={24} strokeWidth={1.8} />,
     accent: "red",
+    group: "Ремонт",
   },
   {
     title: "Двигатель",
     description: "Работа с бензиновыми и дизельными двигателями.",
     icon: <Wrench size={24} strokeWidth={1.8} />,
     accent: "wood",
+    group: "Ремонт",
   },
   {
     title: "Стартеры и генераторы",
     description: "Диагностика и ремонт узлов запуска и зарядки автомобиля.",
     icon: <Zap size={24} strokeWidth={1.8} />,
     accent: "yellow",
+    group: "Ремонт",
   },
   {
     title: "Климатические системы",
     description: "Обслуживание автомобильных систем климат-контроля.",
     icon: <ShieldCheck size={24} strokeWidth={1.8} />,
     accent: "red",
+    group: "Обслуживание",
   },
   {
     title: "Масла и автохимия",
     description: "Автомасла, автохимия и другие направления обслуживания.",
     icon: <BadgeCheck size={24} strokeWidth={1.8} />,
     accent: "wood",
+    group: "Обслуживание",
   },
 ];
 
@@ -301,7 +315,7 @@ export default function Home() {
             <a href="#pricing">Цены</a>
             <a href="#location">Контакты</a>
           </div>
-          <a className="nav-cta" href="#booking"><CalendarDays size={16} /> Записаться</a>
+          <a className="nav-cta" href="#booking" onClick={() => trackCta("nav_booking")}><CalendarDays size={16} /> Записаться</a>
           <div className="mobile-nav-actions">
             {mobilePhoneVisible ? (
               <a className="mobile-phone is-visible" href={PHONE_HREF} aria-label={`Позвонить по номеру ${PHONE}`}>
@@ -362,7 +376,7 @@ export default function Home() {
               <h1>Чтобы машина<br /><em>ехала уверенно.</em></h1>
               <p className="hero-lead">Диагностика и ремонт легковых автомобилей. Ежедневно с 10:00 до 22:00.</p>
               <div className="hero-actions">
-                <a className="button button-yellow" href="#booking"><CalendarDays size={18} /> Записаться</a>
+                <a className="button button-yellow" href="#booking" onClick={() => trackCta("hero_booking")}><CalendarDays size={18} /> Записаться</a>
               </div>
               <div className="hero-meta">
                 <span><MapPin size={15} /> ул. Шагалалы, 1/1</span>
@@ -402,12 +416,15 @@ export default function Home() {
               </div>
               <div className="services-grid">
                 {services.map((service, index) => (
-                  <article className={`service-card service-${service.accent}`} key={service.title}>
+                  <Fragment key={service.title}>
+                    {(index === 0 || services[index - 1].group !== service.group) && <div className="service-group-label"><span>{service.group}</span><small>Подберём следующий шаг</small></div>}
+                  <article className={`service-card service-${service.accent}`}>
                     <div className="service-top"><span className="service-number">0{index + 1}</span><span className="service-icon">{service.icon}</span></div>
                     <h3>{service.title}</h3>
                     <p>{service.description}</p>
-                    <a className="service-link" href="#booking">Уточнить при записи <ArrowUpRight size={15} /></a>
+                    <a className="service-link" href="#booking" onClick={() => trackCta(`service_${service.title}`)}>Обсудить услугу <ArrowUpRight size={15} /></a>
                   </article>
+                  </Fragment>
                 ))}
               </div>
             </div>
@@ -506,9 +523,16 @@ export default function Home() {
           </div>
         </section>
 
+        <section className="section cases-section" id="cases">
+          <div className="container">
+            <div className="section-heading split-heading"><div><span className="eyebrow">Типовые сценарии</span><h2>От вопроса<br /><span>до результата.</span></h2></div><div className="heading-note"><span className="note-index">05</span><p>Это примеры обращений, а не обещание одинакового результата. Итог зависит от осмотра конкретного автомобиля.</p></div></div>
+            <div className="cases-grid"><article className="case-card"><span>01 / ДИАГНОСТИКА</span><h3>Горит ошибка на панели</h3><p>Начинаем с компьютерной диагностики и согласовываем следующий шаг до ремонта.</p><a className="text-link" href="#booking" onClick={() => trackCta("case_diagnostics")}>Описать проблему <ArrowUpRight size={15} /></a></article><article className="case-card case-card-accent"><span>02 / ХОДОВАЯ</span><h3>Появился стук или шум</h3><p>Уточняем симптомы, марку автомобиля и удобное время для осмотра ходовой части.</p><a className="text-link" href="#booking" onClick={() => trackCta("case_suspension")}>Запросить время <ArrowUpRight size={15} /></a></article><article className="case-card"><span>03 / ОБСЛУЖИВАНИЕ</span><h3>Нужно плановое ТО</h3><p>Подскажем, какие данные подготовить, и согласуем список работ до визита.</p><a className="text-link" href="#booking" onClick={() => trackCta("case_maintenance")}>Уточнить детали <ArrowUpRight size={15} /></a></article></div>
+          </div>
+        </section>
+
         <section className="section contact-section" id="booking">
           <div className="container contact-layout">
-            <div className="contact-copy"><span className="eyebrow light">Запись на сервис</span><h2>Выберите<br /><em>удобное время.</em></h2><p>Заполните короткую форму: мы подготовим детали визита и подскажем следующий шаг.</p><div className="contact-phone"><Phone size={19} /><div><span className="contact-phone-label">Телефон владельца / запись</span><a href={PHONE_HREF}>{PHONE}</a></div></div><div className="contact-hours"><Clock3 size={16} /> Ежедневно · 10:00–22:00</div></div>
+            <div className="contact-copy"><span className="eyebrow light">Запись на сервис</span><h2>Выберите<br /><em>удобное время.</em></h2><p>Заполните короткую форму: мы подготовим детали визита и подскажем следующий шаг.</p><div className="contact-phone"><Phone size={19} /><div><span className="contact-phone-label">Телефон владельца / запись</span><a href={PHONE_HREF} onClick={() => trackCta("phone")}>{PHONE}</a></div></div><a className="contact-whatsapp" href={WHATSAPP_HREF} target="_blank" rel="noreferrer" onClick={() => trackCta("whatsapp")}><MessageCircle size={17} /> Написать в WhatsApp <ArrowUpRight size={15} /></a><div className="contact-hours"><Clock3 size={16} /> Ежедневно · 10:00–22:00</div></div>
             <Suspense fallback={<form className="contact-form" aria-busy="true"><div className="form-heading"><span>Заявка на запись</span></div></form>}><BookingForm /></Suspense>
           </div>
         </section>
@@ -523,6 +547,7 @@ export default function Home() {
       {lightbox && <Suspense fallback={<div className="lightbox-loading" role="status">Открываем фото…</div>}><ArqaLightbox image={lightbox} onClose={() => setLightbox(null)} /></Suspense>}
 
       <footer className="footer"><div className="container footer-inner"><div className="footer-brand"><img className="footer-logo" src={LOGO_DARK} alt="ARQA" width={164} height={58} /><div><span>Автосервис в Кокшетау</span></div></div><p>Точный сервис для живых дорог.<br /><span>Факты актуальны по открытым данным 2GIS на 15.09.2026.</span></p><div className="footer-links"><a href={TWO_GIS_HREF} target="_blank" rel="noreferrer">2GIS <ExternalLink size={13} /></a><a href="https://instagram.com/arqa_avto_kompleks" target="_blank" rel="noreferrer">Instagram <ExternalLink size={13} /></a></div></div></footer>
+    <Analytics />
     </div>
   );
 }

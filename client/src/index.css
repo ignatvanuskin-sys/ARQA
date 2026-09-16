@@ -591,3 +591,22 @@ h2 { margin-top: 18px; font-size: clamp(42px, 5vw, 67px); line-height: .98; }
 .form-success { align-items: flex-start; flex-direction: column; }
 .form-success p { display: flex; align-items: center; gap: 7px; margin: 0; }
 .form-call-link { display: inline-flex; align-items: center; gap: 7px; margin-top: 6px; color: var(--red); font-size: 12px; font-weight: 800; }
+
+
+/* Round 5: grouped services, cases, WhatsApp shortcut and confirmation summary */
+.service-group-label { grid-column: 1 / -1; display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 18px 0 2px; border-top: 1px solid var(--line); color: var(--red); font: 11px 'IBM Plex Mono', monospace; letter-spacing: .09em; text-transform: uppercase; }
+.service-group-label small { color: var(--muted); font: 11px 'Manrope', sans-serif; letter-spacing: 0; text-transform: none; }
+.contact-whatsapp { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; color: var(--yellow); font-size: 13px; font-weight: 800; }
+.form-summary { color: var(--red); font-size: 12px !important; }
+.cases-section { background: var(--paper-strong); }
+.cases-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.case-card { min-height: 265px; display: flex; flex-direction: column; align-items: flex-start; padding: 25px; border: 1px solid var(--line); background: var(--paper); }
+.case-card > span { color: var(--red); font: 10px 'IBM Plex Mono', monospace; letter-spacing: .08em; }
+.case-card h3 { margin-top: 45px; font-size: 23px; line-height: 1.05; letter-spacing: -.04em; }
+.case-card p { margin-top: 10px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.case-card .text-link { margin-top: auto; padding-top: 18px; }
+.case-card-accent { border-color: var(--red); background: var(--red); color: var(--white); }
+.case-card-accent > span, .case-card-accent p { color: rgba(255,255,255,.68); }
+.case-card-accent .text-link { color: var(--yellow); }
+@media (max-width: 900px) { .cases-grid { grid-template-columns: 1fr; } .case-card { min-height: 210px; } .case-card h3 { margin-top: 25px; } }
+@media (max-width: 620px) { .service-group-label { padding-top: 14px; } .service-group-label small { display: none; } .cases-grid { gap: 10px; } .case-card { min-height: 0; padding: 20px; } .case-card h3 { margin-top: 28px; font-size: 21px; } }

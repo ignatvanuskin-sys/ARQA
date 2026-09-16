@@ -34,6 +34,7 @@ export default function BookingForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [serverError, setServerError] = useState<string | null>(null);
   const [demoMode, setDemoMode] = useState(false);
+  const [submitted, setSubmitted] = useState<Pick<BookingInput, "car" | "date" | "time"> | null>(null);
   const {
     register,
     handleSubmit,
@@ -61,6 +62,7 @@ export default function BookingForm() {
         throw new Error(data.error ?? "Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам.");
       }
       setDemoMode(Boolean(data.demo));
+      setSubmitted({ car: values.car, date: values.date, time: values.time });
       setStatus("success");
       reset();
     } catch (error) {
@@ -80,6 +82,7 @@ export default function BookingForm() {
           <p>
             <Check size={15} /> {demoMode ? "Демо-режим: форма отработала успешно, но данные не отправлены владельцу." : "Спасибо! Заявка получена — перезвоним в рабочее время (10:00–22:00), чтобы подтвердить запись."}
           </p>
+          {submitted && <p className="form-summary"><strong>{submitted.car}</strong> · {submitted.date} · {submitted.time}</p>}
           <a className="form-call-link" href={PHONE_HREF}>
             <Phone size={15} /> Не хотите ждать? {PHONE}
           </a>
