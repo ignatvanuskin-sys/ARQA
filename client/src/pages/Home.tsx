@@ -1,4 +1,5 @@
-import { FormEvent, lazy, ReactNode, Suspense, useEffect, useRef, useState } from "react";
+import { lazy, ReactNode, Suspense, useEffect, useRef, useState } from "react";
+import { INSTAGRAM_HREF, PHONE, PHONE_HREF, TWO_GIS_HREF, WHATSAPP_HREF } from "@/lib/contacts";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -27,20 +28,64 @@ import {
 
 const CameraIcon = () => <Camera size={21} />;
 const ArqaLightbox = lazy(() => import("@/components/ArqaLightbox"));
+const BookingForm = lazy(() => import("@/components/BookingForm"));
 
-const PHONE = "+7 771 256 66 91";
-const PHONE_HREF = "tel:+77712566691";
-const WHATSAPP_HREF = "https://wa.me/77712566691?text=%D0%9E%D0%BB%D0%B5%D0%B3%2C%20%D1%85%D0%BE%D1%87%D1%83%20%D1%83%D1%82%D0%BE%D1%87%D0%BD%D0%B8%D1%82%D1%8C%20%D0%BF%D0%BE%20%D0%B0%D0%B2%D1%82%D0%BE%D1%81%D0%B5%D1%80%D0%B2%D0%B8%D1%81%D1%83%20Arqa";
-const TWO_GIS_HREF = "https://2gis.kz/kokshetau/firm/70000001068594936";
-const LOGO_LIGHT = "/manus-storage/arqa-logo-light-final_4994abc7.png";
-const LOGO_DARK = "/manus-storage/arqa-logo-dark-final_4b2d0e4f.png";
-const HERO_IMAGE = "/manus-storage/facade_6c49e98a.jpg";
-const HERO_VIDEO = "/manus-storage/arqa-hero-placeholder_a4795a03.mp4";
-const galleryImages = [
-  { path: "/manus-storage/facade_6c49e98a.jpg", title: "01 / ФАСАД", label: "Фасад и въезд Arqa" },
-  { path: "/manus-storage/building_ef5e753d.jpg", title: "02 / ЗДАНИЕ", label: "Здание автосервиса" },
-  { path: "/manus-storage/work_1df29502.jpg", title: "03 / РАБОТА", label: "Фото из галереи посетителей" },
+const LOGO_LIGHT = "/assets/logo-light.webp";
+const LOGO_DARK = "/assets/logo-dark.webp";
+const HERO_IMAGE = "/assets/facade-960.webp";
+const HERO_VIDEO = "/assets/hero.mp4";
+const GALLERY_SIZES = "(min-width: 1024px) 30vw, 92vw";
+
+type GalleryImage = {
+  base: string;
+  full: string;
+  title: string;
+  label: string;
+  alt: string;
+};
+
+const galleryImages: GalleryImage[] = [
+  {
+    base: "facade",
+    full: "/assets/facade-1280.jpg",
+    title: "01 / ФАСАД",
+    label: "Фасад и въезд Arqa",
+    alt: "Фасад и въезд автосервиса Arqa, фото из 2GIS",
+  },
+  {
+    base: "building",
+    full: "/assets/building-1280.jpg",
+    title: "02 / ЗДАНИЕ",
+    label: "Здание автосервиса",
+    alt: "Здание автосервиса Arqa, фото из 2GIS",
+  },
+  {
+    base: "work",
+    full: "/assets/work-1280.jpg",
+    title: "03 / РАБОТА",
+    label: "Фото из галереи посетителей",
+    alt: "Фотография из галереи посетителей Arqa в 2GIS",
+  },
 ];
+
+function Photo({ base, alt, sizes, eager }: { base: string; alt: string; sizes: string; eager?: boolean }) {
+  const widths = [640, 960, 1280];
+  const webpSet = widths.map((w) => `/assets/${base}-${w}.webp ${w}w`).join(", ");
+  const jpgSet = widths.map((w) => `/assets/${base}-${w}.jpg ${w}w`).join(", ");
+  return (
+    <picture>
+      <source type="image/webp" srcSet={webpSet} sizes={sizes} />
+      <img
+        src={`/assets/${base}-1280.jpg`}
+        srcSet={jpgSet}
+        sizes={sizes}
+        alt={alt}
+        loading={eager ? "eager" : "lazy"}
+        decoding="async"
+      />
+    </picture>
+  );
+}
 
 type Service = {
   title: string;
@@ -127,7 +172,6 @@ function scrollToId(id: string) {
 
 export default function Home() {
   const [openFaq, setOpenFaq] = useState(0);
-  const [formSent, setFormSent] = useState(false);
   const [rating, setRating] = useState(4);
   const [hoverRating, setHoverRating] = useState(0);
   const [lightbox, setLightbox] = useState<{ path: string; title: string; label: string } | null>(null);
@@ -135,17 +179,10 @@ export default function Home() {
   const [hasScrolled, setHasScrolled] = useState(false);
   const [mobilePhoneVisible, setMobilePhoneVisible] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [isSmallScreen, setIsSmallScreen] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(max-width: 620px)").matches,
+  );
   const heroVideoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    if (!lightbox) return;
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setLightbox(null);
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [lightbox]);
 
   // The lightbox is a modal: stop the page behind it from scrolling on touch devices.
   useEffect(() => {
@@ -208,13 +245,9 @@ export default function Home() {
     return () => window.removeEventListener("scroll", updateScrollState);
   }, []);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setFormSent(true);
-  }
-
   return (
     <div className="site-shell">
+      <a className="skip-link" href="#top">Перейти к содержанию</a>
       <div className="topline">
         <div className="container topline-inner">
           <span><span className="status-dot" /> Ежедневно 10:00–22:00</span>
@@ -273,7 +306,7 @@ export default function Home() {
         </>}
       </header>
 
-      <main id="top">
+      <main id="top" tabIndex={-1}>
         <section className="hero">
           <video
             className="hero-video"
@@ -369,14 +402,14 @@ export default function Home() {
               <div className="heading-note"><span className="note-index">02A</span><p>Реальные фотографии фасада, здания и работ взяты из публичной галереи Arqa в 2GIS. В карточке опубликовано 13 снимков.</p></div>
             </div>
             <div className="gallery-grid">
-              <button type="button" className="gallery-card gallery-main gallery-photo-card" onClick={() => setLightbox(galleryImages[0])}>
-                <img src={galleryImages[0].path} alt="Фасад и въезд автосервиса Arqa, фото из 2GIS" loading="lazy" decoding="async" /><div className="gallery-photo-overlay"><span className="gallery-code">{galleryImages[0].title}</span><strong>{galleryImages[0].label}</strong><small><ZoomIn size={13} /> Увеличить фото</small></div>
+              <button type="button" className="gallery-card gallery-main gallery-photo-card" onClick={() => setLightbox({ path: galleryImages[0].full, title: galleryImages[0].title, label: galleryImages[0].label })}>
+                <Photo base={galleryImages[0].base} alt={galleryImages[0].alt} sizes={GALLERY_SIZES} /><div className="gallery-photo-overlay"><span className="gallery-code">{galleryImages[0].title}</span><strong>{galleryImages[0].label}</strong><small><ZoomIn size={13} /> Увеличить фото</small></div>
               </button>
-              <button type="button" className="gallery-card gallery-box gallery-photo-card" onClick={() => setLightbox(galleryImages[1])}>
-                <img src={galleryImages[1].path} alt="Здание автосервиса Arqa, фото из 2GIS" loading="lazy" decoding="async" /><div className="gallery-photo-overlay"><span className="gallery-code">{galleryImages[1].title}</span><strong>{galleryImages[1].label}</strong><small><ZoomIn size={13} /> Увеличить фото</small></div>
+              <button type="button" className="gallery-card gallery-box gallery-photo-card" onClick={() => setLightbox({ path: galleryImages[1].full, title: galleryImages[1].title, label: galleryImages[1].label })}>
+                <Photo base={galleryImages[1].base} alt={galleryImages[1].alt} sizes={GALLERY_SIZES} /><div className="gallery-photo-overlay"><span className="gallery-code">{galleryImages[1].title}</span><strong>{galleryImages[1].label}</strong><small><ZoomIn size={13} /> Увеличить фото</small></div>
               </button>
-              <button type="button" className="gallery-card gallery-work gallery-photo-card" onClick={() => setLightbox(galleryImages[2])}>
-                <img src={galleryImages[2].path} alt="Фотография из галереи посетителей Arqa в 2GIS" loading="lazy" decoding="async" /><div className="gallery-photo-overlay"><span className="gallery-code">{galleryImages[2].title}</span><strong>{galleryImages[2].label}</strong><small><ZoomIn size={13} /> Увеличить фото</small></div>
+              <button type="button" className="gallery-card gallery-work gallery-photo-card" onClick={() => setLightbox({ path: galleryImages[2].full, title: galleryImages[2].title, label: galleryImages[2].label })}>
+                <Photo base={galleryImages[2].base} alt={galleryImages[2].alt} sizes={GALLERY_SIZES} /><div className="gallery-photo-overlay"><span className="gallery-code">{galleryImages[2].title}</span><strong>{galleryImages[2].label}</strong><small><ZoomIn size={13} /> Увеличить фото</small></div>
               </button>
               <div className="gallery-note"><CameraIcon /><p><strong>Реальные фото из 2GIS.</strong><br />Всего в карточке опубликовано 13 снимков.</p></div>
             </div>
@@ -442,7 +475,7 @@ export default function Home() {
         <section className="section contact-section" id="booking">
           <div className="container contact-layout">
             <div className="contact-copy"><span className="eyebrow light">Запись на сервис</span><h2>Выберите<br /><em>удобное время.</em></h2><p>Заполните короткую форму: мы подготовим детали визита и подскажем следующий шаг.</p><div className="contact-phone"><Phone size={19} /><a href={PHONE_HREF}>{PHONE}</a></div><div className="contact-hours"><Clock3 size={16} /> Ежедневно · 10:00–22:00</div></div>
-            <form className="contact-form" onSubmit={handleSubmit}><div className="form-heading"><span>Заявка на запись</span><span className="form-badge">2 минуты</span></div><label>Как к вам обращаться?<input name="name" placeholder="Ваше имя" required /></label><label>Автомобиль<input name="car" placeholder="Марка и модель" required /></label><div className="form-two"><label>Дата<input name="date" type="date" required /></label><label>Время<input name="time" type="time" required /></label></div><label>Что нужно сделать?<textarea name="issue" placeholder="Например: диагностика, замена масла, шум в подвеске" rows={3} required /></label><button className="button button-yellow form-button" type="submit"><CalendarDays size={18} /> Записаться</button>{formSent && <div className="form-success"><p><Check size={15} /> Заявка подготовлена на этом устройстве.</p><a className="form-call-link" href={PHONE_HREF}><Phone size={15} /> Подтвердить по телефону</a></div>}<p className="form-note">Форма пока не отправляет данные на сервер. После заполнения подтвердите время по телефону.</p></form>
+            <Suspense fallback={<form className="contact-form" aria-busy="true"><div className="form-heading"><span>Заявка на запись</span></div></form>}><BookingForm /></Suspense>
           </div>
         </section>
 
