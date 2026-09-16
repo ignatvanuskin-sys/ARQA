@@ -5,7 +5,8 @@ const timePattern = /^\d{2}:\d{2}$/;
 function clean(value) { return typeof value === "string" ? value.trim() : ""; }
 function escapeHtml(value) { return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"); }
 function message(b) {
-  return ["🛠 <b>Новая заявка с сайта Arqa</b>", "", `👤 <b>Имя:</b> ${escapeHtml(b.name)}`, `📞 <b>Телефон:</b> ${escapeHtml(b.phone)}`, `🚗 <b>Авто:</b> ${escapeHtml(b.car)}`, `📅 <b>Дата:</b> ${escapeHtml(b.date)} в ${escapeHtml(b.time)}`, `🔧 <b>Проблема:</b> ${escapeHtml(b.issue)}`].join("\n");
+  const visit = b.date && b.time ? `${b.date} в ${b.time}` : "время уточнить звонком";
+  return ["🛠 <b>Новая заявка с сайта Arqa</b>", "", `👤 <b>Имя:</b> ${escapeHtml(b.name)}`, `📞 <b>Телефон:</b> ${escapeHtml(b.phone)}`, `🚗 <b>Авто:</b> ${escapeHtml(b.car)}`, `📅 <b>Визит:</b> ${escapeHtml(visit)}`, `🔧 <b>Проблема:</b> ${escapeHtml(b.issue)}`].join("\n");
 }
 
 export default async function handler(req, res) {
@@ -22,10 +23,10 @@ export default async function handler(req, res) {
 
   const booking = { name: clean(body.name), phone: clean(body.phone), car: clean(body.car), date: clean(body.date), time: clean(body.time), issue: clean(body.issue) };
   if (booking.name.length < 2 || booking.name.length > 80) return res.status(400).json({ error: "Укажите имя (минимум 2 символа)" });
-  if (!phonePattern.test(booking.phone)) return res.status(400).json({ error: "Введите телефон в формате +7 (771) 256-66-91" });
+  if (!phonePattern.test(booking.phone)) return res.status(400).json({ error: "Введите телефон в формате +7 (XXX) XXX-XX-XX" });
   if (booking.car.length < 2 || booking.car.length > 100) return res.status(400).json({ error: "Укажите марку и модель" });
-  if (!datePattern.test(booking.date)) return res.status(400).json({ error: "Выберите дату" });
-  if (!timePattern.test(booking.time)) return res.status(400).json({ error: "Выберите время" });
+  if (booking.date && !datePattern.test(booking.date)) return res.status(400).json({ error: "Выберите дату в корректном формате" });
+  if (booking.time && !timePattern.test(booking.time)) return res.status(400).json({ error: "Выберите время в корректном формате" });
   if (booking.issue.length < 5 || booking.issue.length > 2000) return res.status(400).json({ error: "Опишите, что нужно сделать" });
 
   if (!process.env.TELEGRAM_BOT_TOKEN || !process.env.TELEGRAM_CHAT_ID) {

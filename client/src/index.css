@@ -610,3 +610,23 @@ h2 { margin-top: 18px; font-size: clamp(42px, 5vw, 67px); line-height: .98; }
 .case-card-accent .text-link { color: var(--yellow); }
 @media (max-width: 900px) { .cases-grid { grid-template-columns: 1fr; } .case-card { min-height: 210px; } .case-card h3 { margin-top: 25px; } }
 @media (max-width: 620px) { .service-group-label { padding-top: 14px; } .service-group-label small { display: none; } .cases-grid { gap: 10px; } .case-card { min-height: 0; padding: 20px; } .case-card h3 { margin-top: 28px; font-size: 21px; } }
+
+
+/* Mobile audit fixes */
+.section:not(.dark-section) h2 span { color: var(--red); }
+.location-info h2 span { color: var(--red); }
+.hero h1 em, .dark-section h2 span, .contact-section h2 em { color: var(--yellow); }
+html { scroll-padding-top: 84px; }
+.location-info h2 span { color: var(--red); }
+.mobile-menu-scrim { z-index: 0; background: rgba(10,10,10,.78); backdrop-filter: blur(4px); }
+.mobile-menu { z-index: 1; }
+.lightbox-close { width: 44px; height: 44px; }
+.contact-phone a { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 0; }
+.form-optional { margin-left: 5px; color: var(--muted); font-size: 10px; font-weight: 400; text-transform: none; }
+.faq-answer { display: grid; grid-template-rows: 0fr; max-width: 640px; padding: 0 42px 0 31px; overflow: hidden; animation: none; transition: grid-template-rows .25s ease, padding-bottom .25s ease; }
+.faq-answer > div { min-height: 0; overflow: hidden; }
+.faq-answer.is-open { grid-template-rows: 1fr; padding-bottom: 21px; }
+.reveal-on-scroll { opacity: 0; transform: translateY(14px); transition: opacity .3s ease, transform .3s var(--ease-out); }
+.reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
+@media (max-width: 620px) { .hero-meta, .gallery-code, .trust-stat > span { font-size: 11px; } .faq-answer { padding-left: 25px; } .faq-answer.is-open { padding-bottom: 18px; } }
+@media (prefers-reduced-motion: reduce) { .reveal-on-scroll, .reveal-on-scroll.is-visible { opacity: 1; transform: none; transition: none; } .faq-answer { transition: none; } }

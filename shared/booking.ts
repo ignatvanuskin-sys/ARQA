@@ -13,14 +13,14 @@ export const bookingSchema = z.object({
   phone: z
     .string()
     .trim()
-    .regex(/^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/, "Введите телефон в формате +7 (771) 256-66-91"),
+    .regex(/^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/, "Введите телефон в формате +7 (XXX) XXX-XX-XX"),
   car: z
     .string()
     .trim()
     .min(2, "Укажите марку и модель")
     .max(100, "Слишком длинное название"),
-  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Выберите дату"),
-  time: z.string().regex(/^\d{2}:\d{2}$/, "Выберите время"),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Выберите дату").optional().or(z.literal("")),
+  time: z.string().regex(/^\d{2}:\d{2}$/, "Выберите время").optional().or(z.literal("")),
   issue: z
     .string()
     .trim()

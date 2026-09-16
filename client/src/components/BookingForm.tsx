@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { bookingSchema, type BookingInput } from "@shared/booking";
 import { CalendarDays, Check, Loader2, Phone } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { PHONE, PHONE_HREF } from "@/lib/contacts";
 
@@ -35,6 +35,7 @@ export default function BookingForm() {
   const [serverError, setServerError] = useState<string | null>(null);
   const [demoMode, setDemoMode] = useState(false);
   const [submitted, setSubmitted] = useState<Pick<BookingInput, "car" | "date" | "time"> | null>(null);
+  const successRef = useRef<HTMLDivElement>(null);
   const {
     register,
     handleSubmit,
@@ -47,6 +48,10 @@ export default function BookingForm() {
     // The honeypot must never trigger client-side validation errors.
     // Filled honeypots are dropped silently on the server.
   });
+
+  useEffect(() => {
+    if (status === "success") successRef.current?.focus();
+  }, [status]);
 
   async function onSubmit(values: BookingInput) {
     setStatus("sending");
@@ -73,7 +78,7 @@ export default function BookingForm() {
 
   if (status === "success") {
     return (
-      <div className="contact-form" role="status">
+      <div className="contact-form" role="status" tabIndex={-1} ref={successRef}>
         <div className="form-heading">
           <span>{demoMode ? "Демо-заявка отправлена" : "Заявка отправлена"}</span>
           <span className="form-badge">Готово</span>
@@ -82,7 +87,7 @@ export default function BookingForm() {
           <p>
             <Check size={15} /> {demoMode ? "Демо-режим: форма отработала успешно, но данные не отправлены владельцу." : "Спасибо! Заявка получена — перезвоним в рабочее время (10:00–22:00), чтобы подтвердить запись."}
           </p>
-          {submitted && <p className="form-summary"><strong>{submitted.car}</strong> · {submitted.date} · {submitted.time}</p>}
+          {submitted && <p className="form-summary"><strong>{[submitted.car, submitted.date, submitted.time].filter(Boolean).join(" · ")}</strong></p>}
           <a className="form-call-link" href={PHONE_HREF}>
             <Phone size={15} /> Не хотите ждать? {PHONE}
           </a>
@@ -127,12 +132,12 @@ export default function BookingForm() {
 
       <div className="form-two">
         <label>
-          Дата
+          Дата <span className="form-optional">необязательно</span>
           <input type="date" min={todayIso()} aria-invalid={Boolean(errors.date)} {...register("date")} />
           {errors.date && <span className="form-error">{errors.date.message}</span>}
         </label>
         <label>
-          Время
+          Время <span className="form-optional">необязательно</span>
           <input type="time" aria-invalid={Boolean(errors.time)} {...register("time")} />
           {errors.time && <span className="form-error">{errors.time.message}</span>}
         </label>

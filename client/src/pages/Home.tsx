@@ -288,6 +288,21 @@ export default function Home() {
     return () => window.removeEventListener("scroll", updateScrollState);
   }, []);
 
+  useEffect(() => {
+    const nodes = document.querySelectorAll<HTMLElement>(".reveal-on-scroll");
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) {
+      nodes.forEach((node) => node.classList.add("is-visible"));
+      return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) { entry.target.classList.add("is-visible"); observer.unobserve(entry.target); }
+      });
+    }, { threshold: 0.12 });
+    nodes.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="site-shell">
       <a className="skip-link" href="#top">Перейти к содержанию</a>
@@ -411,14 +426,14 @@ export default function Home() {
             <div className="services-layout">
               <div className="service-aside">
                 <div className="aside-number">06</div>
-                <p>направлений,<br />чтобы начать<br /><strong>с одного сообщения.</strong></p>
+                <p>Шесть направлений,<br />чтобы начать<br /><strong>с одного сообщения.</strong></p>
                 <a className="text-link" href="#booking">Выбрать время записи <ArrowUpRight size={15} /></a>
               </div>
               <div className="services-grid">
                 {services.map((service, index) => (
                   <Fragment key={service.title}>
                     {(index === 0 || services[index - 1].group !== service.group) && <div className="service-group-label"><span>{service.group}</span><small>Подберём следующий шаг</small></div>}
-                  <article className={`service-card service-${service.accent}`}>
+                  <article className={`service-card service-${service.accent} reveal-on-scroll`}>
                     <div className="service-top"><span className="service-number">0{index + 1}</span><span className="service-icon">{service.icon}</span></div>
                     <h3>{service.title}</h3>
                     <p>{service.description}</p>
@@ -438,10 +453,10 @@ export default function Home() {
               <div className="heading-note"><span className="note-index">02</span><p>Четыре понятные причины выбрать Arqa. Без громких обещаний — только условия, которые важно знать до визита.</p></div>
             </div>
             <div className="why-grid">
-              <article className="why-card why-card-large"><div className="why-number">01</div><div><h3>До 22:00<br />каждый день</h3><p>Работаем ежедневно с 10:00 до 22:00 — можно приехать после работы.</p></div><Clock3 className="why-icon" size={42} strokeWidth={1.2} /></article>
-              <article className="why-card"><div className="why-number">02</div><h3>Тёплый бокс</h3><p>Автомобиль можно обслуживать в закрытом тёплом помещении.</p><div className="why-mini-mark">ARQA</div></article>
-              <article className="why-card"><div className="why-number">03</div><h3>Удобная оплата</h3><p>Карта, наличные, перевод или QR — выберите удобный вариант.</p><div className="payment-pills"><span>₸</span><span>QR</span><span>•••</span></div></article>
-              <article className="why-card why-card-wide"><div className="why-number">04</div><div><h3>Сначала — диалог</h3><p>Опишите проблему по телефону или в WhatsApp. До начала работ согласуем объём и стоимость.</p></div><MessageCircle className="why-icon" size={42} strokeWidth={1.2} /></article>
+              <article className="why-card why-card-large reveal-on-scroll"><div className="why-number">01</div><div><h3>До 22:00<br />каждый день</h3><p>Работаем ежедневно с 10:00 до 22:00 — можно приехать после работы.</p></div><Clock3 className="why-icon" size={42} strokeWidth={1.2} /></article>
+              <article className="why-card reveal-on-scroll"><div className="why-number">02</div><h3>Тёплый бокс</h3><p>Автомобиль можно обслуживать в закрытом тёплом помещении.</p><div className="why-mini-mark">ARQA</div></article>
+              <article className="why-card reveal-on-scroll"><div className="why-number">03</div><h3>Удобная оплата</h3><p>Карта, наличные, перевод или QR — выберите удобный вариант.</p><div className="payment-pills"><span>₸</span><span>QR</span><span>•••</span></div></article>
+              <article className="why-card why-card-wide reveal-on-scroll"><div className="why-number">04</div><div><h3>Сначала — диалог</h3><p>Опишите проблему по телефону или в WhatsApp. До начала работ согласуем объём и стоимость.</p></div><MessageCircle className="why-icon" size={42} strokeWidth={1.2} /></article>
             </div>
           </div>
         </section>
@@ -519,14 +534,14 @@ export default function Home() {
         <section className="section process-section">
           <div className="container">
             <div className="section-heading split-heading"><div><span className="eyebrow">Простой старт</span><h2>Три шага<br /><span>до сервиса.</span></h2></div><div className="heading-note"><span className="note-index">03</span><p>Короткий рекомендуемый сценарий обращения. Конкретные условия диагностики, сроков и сметы лучше подтвердить у владельца.</p></div></div>
-            <div className="process-grid"><div className="process-step"><span>01</span><h3>Опишите проблему</h3><p>Напишите, что происходит, и укажите марку и модель автомобиля.</p><ArrowUpRight size={21} /></div><div className="process-step featured-step"><span>02</span><h3>Согласуйте детали</h3><p>Уточните возможность, стоимость и удобное время по телефону или в WhatsApp.</p><MessageCircle size={21} /></div><div className="process-step"><span>03</span><h3>Приезжайте в Arqa</h3><p>Кокшетау, улица Шагалалы, 1/1. Ориентир — остановка в 5 минутах.</p><Navigation size={21} /></div></div>
+            <div className="process-grid"><div className="process-step reveal-on-scroll"><span>01</span><h3>Опишите проблему</h3><p>Напишите, что происходит, и укажите марку и модель автомобиля.</p><ArrowUpRight size={21} /></div><div className="process-step featured-step reveal-on-scroll"><span>02</span><h3>Согласуйте детали</h3><p>Уточните возможность, стоимость и удобное время по телефону или в WhatsApp.</p><MessageCircle size={21} /></div><div className="process-step reveal-on-scroll"><span>03</span><h3>Приезжайте в Arqa</h3><p>Кокшетау, улица Шагалалы, 1/1. Ориентир — остановка в 5 минутах.</p><Navigation size={21} /></div></div>
           </div>
         </section>
 
         <section className="section cases-section" id="cases">
           <div className="container">
             <div className="section-heading split-heading"><div><span className="eyebrow">Типовые сценарии</span><h2>От вопроса<br /><span>до результата.</span></h2></div><div className="heading-note"><span className="note-index">05</span><p>Это примеры обращений, а не обещание одинакового результата. Итог зависит от осмотра конкретного автомобиля.</p></div></div>
-            <div className="cases-grid"><article className="case-card"><span>01 / ДИАГНОСТИКА</span><h3>Горит ошибка на панели</h3><p>Начинаем с компьютерной диагностики и согласовываем следующий шаг до ремонта.</p><a className="text-link" href="#booking" onClick={() => trackCta("case_diagnostics")}>Описать проблему <ArrowUpRight size={15} /></a></article><article className="case-card case-card-accent"><span>02 / ХОДОВАЯ</span><h3>Появился стук или шум</h3><p>Уточняем симптомы, марку автомобиля и удобное время для осмотра ходовой части.</p><a className="text-link" href="#booking" onClick={() => trackCta("case_suspension")}>Запросить время <ArrowUpRight size={15} /></a></article><article className="case-card"><span>03 / ОБСЛУЖИВАНИЕ</span><h3>Нужно плановое ТО</h3><p>Подскажем, какие данные подготовить, и согласуем список работ до визита.</p><a className="text-link" href="#booking" onClick={() => trackCta("case_maintenance")}>Уточнить детали <ArrowUpRight size={15} /></a></article></div>
+            <div className="cases-grid"><article className="case-card reveal-on-scroll"><span>01 / ДИАГНОСТИКА</span><h3>Горит ошибка на панели</h3><p>Начинаем с компьютерной диагностики и согласовываем следующий шаг до ремонта.</p><a className="text-link" href="#booking" onClick={() => trackCta("case_diagnostics")}>Описать проблему <ArrowUpRight size={15} /></a></article><article className="case-card case-card-accent reveal-on-scroll"><span>02 / ХОДОВАЯ</span><h3>Появился стук или шум</h3><p>Уточняем симптомы, марку автомобиля и удобное время для осмотра ходовой части.</p><a className="text-link" href="#booking" onClick={() => trackCta("case_suspension")}>Запросить время <ArrowUpRight size={15} /></a></article><article className="case-card reveal-on-scroll"><span>03 / ОБСЛУЖИВАНИЕ</span><h3>Нужно плановое ТО</h3><p>Подскажем, какие данные подготовить, и согласуем список работ до визита.</p><a className="text-link" href="#booking" onClick={() => trackCta("case_maintenance")}>Уточнить детали <ArrowUpRight size={15} /></a></article></div>
           </div>
         </section>
 
@@ -538,7 +553,7 @@ export default function Home() {
         </section>
 
         <section className="section faq-section">
-          <div className="container faq-layout"><div><span className="eyebrow">Без мелкого шрифта</span><h2>Частые<br /><span>вопросы.</span></h2><p className="faq-intro">Если ответа здесь нет, можно написать в WhatsApp — контакт всегда под рукой.</p><a className="text-link" href={WHATSAPP_HREF} target="_blank" rel="noreferrer">Задать вопрос <ArrowUpRight size={15} /></a></div><div className="faq-list">{faq.map((item, index) => <div className={`faq-item ${openFaq === index ? "is-open" : ""}`} key={item.question}><button type="button" onClick={() => setOpenFaq(openFaq === index ? -1 : index)} aria-expanded={openFaq === index}><span><b>0{index + 1}</b>{item.question}</span><ChevronDown size={19} /></button>{openFaq === index && <div className="faq-answer"><p>{item.answer}</p></div>}</div>)}</div></div>
+          <div className="container faq-layout"><div><span className="eyebrow">Без мелкого шрифта</span><h2>Частые<br /><span>вопросы.</span></h2><p className="faq-intro">Если ответа здесь нет, можно написать в WhatsApp — контакт всегда под рукой.</p><a className="text-link" href={WHATSAPP_HREF} target="_blank" rel="noreferrer">Задать вопрос <ArrowUpRight size={15} /></a></div><div className="faq-list">{faq.map((item, index) => <div className={`faq-item ${openFaq === index ? "is-open" : ""}`} key={item.question}><button type="button" onClick={() => setOpenFaq(openFaq === index ? -1 : index)} aria-expanded={openFaq === index}><span><b>0{index + 1}</b>{item.question}</span><ChevronDown size={19} /></button><div className={`faq-answer ${openFaq === index ? "is-open" : ""}`}><div><p>{item.answer}</p></div></div></div>)}</div></div>
         </section>
 
         <section className="location-section" id="location"><div className="container location-card"><div className="location-map" aria-hidden="true"><div className="map-grid" /><div className="map-pin"><MapPin size={22} fill="currentColor" /></div><div className="map-label">ARQA<br /><span>Шагалалы, 1/1</span></div></div><div className="location-info"><span className="eyebrow">Где нас найти</span><h2>Приезжайте<br /><span>в Arqa.</span></h2><div className="address-line"><MapPin size={19} /><div><strong>Кокшетау, ул. Шагалалы, 1/1</strong><span>Около 450 м от остановки «Нулевая дачная (по требованию)»</span></div></div><div className="contact-owner"><Phone size={18} /><div><span>Телефон владельца</span><a href={PHONE_HREF}>{PHONE}</a></div></div><div className="location-actions"><a className="text-link" href="#booking">Записаться <CalendarDays size={15} /></a><a className="text-link" href={TWO_GIS_HREF} target="_blank" rel="noreferrer">Построить маршрут <Navigation size={15} /></a></div><div className="social-row"><a href="https://instagram.com/arqa_avto_kompleks" target="_blank" rel="noreferrer"><Instagram size={16} /> @arqa_avto_kompleks</a><span>Оплата: карта · наличные · перевод · QR</span></div></div></div></section>
