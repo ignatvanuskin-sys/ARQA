@@ -25,8 +25,8 @@ async function startServer() {
         directives: {
           defaultSrc: ["'self'"],
           scriptSrc: ["'self'", "https:"],
-          styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-          fontSrc: ["'self'", "https://fonts.gstatic.com"],
+          styleSrc: ["'self'", "'unsafe-inline'"],
+          fontSrc: ["'self'"],
           imgSrc: ["'self'", "data:"],
           mediaSrc: ["'self'"],
           connectSrc: ["'self'", "https:"],

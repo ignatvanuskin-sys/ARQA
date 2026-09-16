@@ -27,20 +27,10 @@
     <meta name="twitter:description" content="Ремонт и диагностика легковых автомобилей. Ежедневно 10:00–22:00, ул. Шагалалы, 1/1." />
     <meta name="twitter:image" content="{{SITE_URL}}/assets/og-image.jpg" />
     <title>Arqa — автосервис в Кокшетау | Диагностика и ремонт авто</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap"
-      media="print"
-      onload="this.media='all'"
-    />
-    <noscript>
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap"
-      />
-    </noscript>
+    <!-- Fonts are self-hosted in /fonts with font-display:swap (see index.css).
+         Deliberately NOT preloaded: measurements showed even one font preload
+         worsens real LCP (195ms -> 291ms) by crowding the critical window;
+         swap covers the fallback-to-webfont transition. -->
     <link rel="preload" as="image" href="/assets/facade-960.webp" fetchpriority="high" />
   </head>
   <body>

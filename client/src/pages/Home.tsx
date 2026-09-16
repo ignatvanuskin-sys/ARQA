@@ -34,7 +34,8 @@ const LOGO_LIGHT = "/assets/logo-light.webp";
 const LOGO_DARK = "/assets/logo-dark.webp";
 const HERO_IMAGE = "/assets/facade-960.webp";
 const HERO_VIDEO = "/assets/hero.mp4";
-const GALLERY_SIZES = "(min-width: 1024px) 30vw, 92vw";
+const GALLERY_SIZES_MAIN = "(min-width: 1024px) 50vw, (min-width: 621px) 46vw, 92vw";
+const GALLERY_SIZES_SIDE = "(min-width: 1024px) 30vw, (min-width: 621px) 46vw, 92vw";
 
 type GalleryImage = {
   base: string;
@@ -433,13 +434,13 @@ export default function Home() {
             </div>
             <div className="gallery-grid">
               <button type="button" className="gallery-card gallery-main gallery-photo-card" onClick={() => setLightbox({ path: galleryImages[0].full, title: galleryImages[0].title, label: galleryImages[0].label })}>
-                <Photo base={galleryImages[0].base} alt={galleryImages[0].alt} sizes={GALLERY_SIZES} width={galleryImages[0].width} height={galleryImages[0].height} /><div className="gallery-photo-overlay"><span className="gallery-code">{galleryImages[0].title}</span><strong>{galleryImages[0].label}</strong><small><ZoomIn size={13} /> Увеличить фото</small></div>
+                <Photo base={galleryImages[0].base} alt={galleryImages[0].alt} sizes={GALLERY_SIZES_MAIN} width={galleryImages[0].width} height={galleryImages[0].height} /><div className="gallery-photo-overlay"><span className="gallery-code">{galleryImages[0].title}</span><strong>{galleryImages[0].label}</strong><small><ZoomIn size={13} /> Увеличить фото</small></div>
               </button>
               <button type="button" className="gallery-card gallery-box gallery-photo-card" onClick={() => setLightbox({ path: galleryImages[1].full, title: galleryImages[1].title, label: galleryImages[1].label })}>
-                <Photo base={galleryImages[1].base} alt={galleryImages[1].alt} sizes={GALLERY_SIZES} width={galleryImages[1].width} height={galleryImages[1].height} /><div className="gallery-photo-overlay"><span className="gallery-code">{galleryImages[1].title}</span><strong>{galleryImages[1].label}</strong><small><ZoomIn size={13} /> Увеличить фото</small></div>
+                <Photo base={galleryImages[1].base} alt={galleryImages[1].alt} sizes={GALLERY_SIZES_SIDE} width={galleryImages[1].width} height={galleryImages[1].height} /><div className="gallery-photo-overlay"><span className="gallery-code">{galleryImages[1].title}</span><strong>{galleryImages[1].label}</strong><small><ZoomIn size={13} /> Увеличить фото</small></div>
               </button>
               <button type="button" className="gallery-card gallery-work gallery-photo-card" onClick={() => setLightbox({ path: galleryImages[2].full, title: galleryImages[2].title, label: galleryImages[2].label })}>
-                <Photo base={galleryImages[2].base} alt={galleryImages[2].alt} sizes={GALLERY_SIZES} width={galleryImages[2].width} height={galleryImages[2].height} /><div className="gallery-photo-overlay"><span className="gallery-code">{galleryImages[2].title}</span><strong>{galleryImages[2].label}</strong><small><ZoomIn size={13} /> Увеличить фото</small></div>
+                <Photo base={galleryImages[2].base} alt={galleryImages[2].alt} sizes={GALLERY_SIZES_SIDE} width={galleryImages[2].width} height={galleryImages[2].height} /><div className="gallery-photo-overlay"><span className="gallery-code">{galleryImages[2].title}</span><strong>{galleryImages[2].label}</strong><small><ZoomIn size={13} /> Увеличить фото</small></div>
               </button>
               <div className="gallery-note"><CameraIcon /><p><strong>Реальные фото из 2GIS.</strong><br />Всего в карточке опубликовано 13 снимков.</p></div>
             </div>
