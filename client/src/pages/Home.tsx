@@ -39,6 +39,8 @@ const GALLERY_SIZES = "(min-width: 1024px) 30vw, 92vw";
 type GalleryImage = {
   base: string;
   full: string;
+  width: number;
+  height: number;
   title: string;
   label: string;
   alt: string;
@@ -48,6 +50,8 @@ const galleryImages: GalleryImage[] = [
   {
     base: "facade",
     full: "/assets/facade-1280.jpg",
+    width: 1440,
+    height: 1080,
     title: "01 / ФАСАД",
     label: "Фасад и въезд Arqa",
     alt: "Фасад и въезд автосервиса Arqa, фото из 2GIS",
@@ -55,6 +59,8 @@ const galleryImages: GalleryImage[] = [
   {
     base: "building",
     full: "/assets/building-1280.jpg",
+    width: 1440,
+    height: 648,
     title: "02 / ЗДАНИЕ",
     label: "Здание автосервиса",
     alt: "Здание автосервиса Arqa, фото из 2GIS",
@@ -62,13 +68,15 @@ const galleryImages: GalleryImage[] = [
   {
     base: "work",
     full: "/assets/work-1280.jpg",
+    width: 1440,
+    height: 1080,
     title: "03 / РАБОТА",
     label: "Фото из галереи посетителей",
     alt: "Фотография из галереи посетителей Arqa в 2GIS",
   },
 ];
 
-function Photo({ base, alt, sizes, eager }: { base: string; alt: string; sizes: string; eager?: boolean }) {
+function Photo({ base, alt, sizes, width, height, eager }: { base: string; alt: string; sizes: string; width: number; height: number; eager?: boolean }) {
   const widths = [640, 960, 1280];
   const webpSet = widths.map((w) => `/assets/${base}-${w}.webp ${w}w`).join(", ");
   const jpgSet = widths.map((w) => `/assets/${base}-${w}.jpg ${w}w`).join(", ");
@@ -79,6 +87,8 @@ function Photo({ base, alt, sizes, eager }: { base: string; alt: string; sizes: 
         src={`/assets/${base}-1280.jpg`}
         srcSet={jpgSet}
         sizes={sizes}
+        width={width}
+        height={height}
         alt={alt}
         loading={eager ? "eager" : "lazy"}
         decoding="async"
@@ -184,6 +194,22 @@ export default function Home() {
   );
   const heroVideoRef = useRef<HTMLVideoElement>(null);
 
+  // Hide the static boot-hero placeholder once the real hero is rendered.
+  // Two rAFs guarantee the hero has actually painted first — otherwise the
+  // video would re-register as a fresh LCP candidate.
+  useEffect(() => {
+    let raf2 = 0;
+    const raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        document.querySelector(".boot-hero")?.classList.add("is-done");
+      });
+    });
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+    };
+  }, []);
+
   // The lightbox is a modal: stop the page behind it from scrolling on touch devices.
   useEffect(() => {
     if (!lightbox) return;
@@ -225,18 +251,20 @@ export default function Home() {
   }, []);
 
   // `autoPlay` is only read at mount, so drive playback imperatively when the
-  // preference resolves (or changes) afterwards.
+  // preference resolves (or changes) afterwards. On small screens the video
+  // never plays: with autoplay the browser downloads it even under
+  // preload="none", wasting ~340 KB on mobile connections.
   useEffect(() => {
     const video = heroVideoRef.current;
     if (!video) return;
-    if (reduceMotion) {
+    if (reduceMotion || isSmallScreen) {
       video.pause();
     } else {
       void video.play().catch(() => {
         /* autoplay can be refused; the poster stays visible */
       });
     }
-  }, [reduceMotion]);
+  }, [reduceMotion, isSmallScreen]);
 
   useEffect(() => {
     const updateScrollState = () => setHasScrolled(window.scrollY > 420);
@@ -262,7 +290,7 @@ export default function Home() {
       <header className={`nav-wrap ${hasScrolled ? "is-following" : ""}`}>
         <nav className="container main-nav" aria-label="Основная навигация">
           <a className="brand" href="#top" aria-label="Arqa — в начало" data-light-logo={LOGO_LIGHT}>
-            <img className="brand-logo" src={LOGO_DARK} alt="ARQA" />
+            <img className="brand-logo" src={LOGO_DARK} alt="ARQA" width={164} height={58} />
             <span className="brand-sub">AUTO SERVICE</span>
           </a>
           <div className="nav-links">
@@ -311,7 +339,7 @@ export default function Home() {
           <video
             className="hero-video"
             ref={heroVideoRef}
-            autoPlay={!reduceMotion}
+            autoPlay={!reduceMotion && !isSmallScreen}
             muted
             loop
             playsInline
@@ -403,13 +431,13 @@ export default function Home() {
             </div>
             <div className="gallery-grid">
               <button type="button" className="gallery-card gallery-main gallery-photo-card" onClick={() => setLightbox({ path: galleryImages[0].full, title: galleryImages[0].title, label: galleryImages[0].label })}>
-                <Photo base={galleryImages[0].base} alt={galleryImages[0].alt} sizes={GALLERY_SIZES} /><div className="gallery-photo-overlay"><span className="gallery-code">{galleryImages[0].title}</span><strong>{galleryImages[0].label}</strong><small><ZoomIn size={13} /> Увеличить фото</small></div>
+                <Photo base={galleryImages[0].base} alt={galleryImages[0].alt} sizes={GALLERY_SIZES} width={galleryImages[0].width} height={galleryImages[0].height} /><div className="gallery-photo-overlay"><span className="gallery-code">{galleryImages[0].title}</span><strong>{galleryImages[0].label}</strong><small><ZoomIn size={13} /> Увеличить фото</small></div>
               </button>
               <button type="button" className="gallery-card gallery-box gallery-photo-card" onClick={() => setLightbox({ path: galleryImages[1].full, title: galleryImages[1].title, label: galleryImages[1].label })}>
-                <Photo base={galleryImages[1].base} alt={galleryImages[1].alt} sizes={GALLERY_SIZES} /><div className="gallery-photo-overlay"><span className="gallery-code">{galleryImages[1].title}</span><strong>{galleryImages[1].label}</strong><small><ZoomIn size={13} /> Увеличить фото</small></div>
+                <Photo base={galleryImages[1].base} alt={galleryImages[1].alt} sizes={GALLERY_SIZES} width={galleryImages[1].width} height={galleryImages[1].height} /><div className="gallery-photo-overlay"><span className="gallery-code">{galleryImages[1].title}</span><strong>{galleryImages[1].label}</strong><small><ZoomIn size={13} /> Увеличить фото</small></div>
               </button>
               <button type="button" className="gallery-card gallery-work gallery-photo-card" onClick={() => setLightbox({ path: galleryImages[2].full, title: galleryImages[2].title, label: galleryImages[2].label })}>
-                <Photo base={galleryImages[2].base} alt={galleryImages[2].alt} sizes={GALLERY_SIZES} /><div className="gallery-photo-overlay"><span className="gallery-code">{galleryImages[2].title}</span><strong>{galleryImages[2].label}</strong><small><ZoomIn size={13} /> Увеличить фото</small></div>
+                <Photo base={galleryImages[2].base} alt={galleryImages[2].alt} sizes={GALLERY_SIZES} width={galleryImages[2].width} height={galleryImages[2].height} /><div className="gallery-photo-overlay"><span className="gallery-code">{galleryImages[2].title}</span><strong>{galleryImages[2].label}</strong><small><ZoomIn size={13} /> Увеличить фото</small></div>
               </button>
               <div className="gallery-note"><CameraIcon /><p><strong>Реальные фото из 2GIS.</strong><br />Всего в карточке опубликовано 13 снимков.</p></div>
             </div>
@@ -494,7 +522,7 @@ export default function Home() {
         <a className="mobile-bar-wa" href={WHATSAPP_HREF} target="_blank" rel="noreferrer" tabIndex={hasScrolled && !mobileMenuOpen && !lightbox ? undefined : -1}><MessageCircle size={17} /> WhatsApp</a>
       </div>
 
-      <footer className="footer"><div className="container footer-inner"><div className="footer-brand"><img className="footer-logo" src={LOGO_DARK} alt="ARQA" /><div><span>Автосервис в Кокшетау</span></div></div><p>Точный сервис для живых дорог.<br /><span>Факты актуальны по открытым данным 2GIS на 15.09.2026.</span></p><div className="footer-links"><a href={TWO_GIS_HREF} target="_blank" rel="noreferrer">2GIS <ExternalLink size={13} /></a><a href="https://instagram.com/arqa_avto_kompleks" target="_blank" rel="noreferrer">Instagram <ExternalLink size={13} /></a></div></div></footer>
+      <footer className="footer"><div className="container footer-inner"><div className="footer-brand"><img className="footer-logo" src={LOGO_DARK} alt="ARQA" width={164} height={58} /><div><span>Автосервис в Кокшетау</span></div></div><p>Точный сервис для живых дорог.<br /><span>Факты актуальны по открытым данным 2GIS на 15.09.2026.</span></p><div className="footer-links"><a href={TWO_GIS_HREF} target="_blank" rel="noreferrer">2GIS <ExternalLink size={13} /></a><a href="https://instagram.com/arqa_avto_kompleks" target="_blank" rel="noreferrer">Instagram <ExternalLink size={13} /></a></div></div></footer>
     </div>
   );
 }
